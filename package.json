@@ -8,7 +8,6 @@
     "test:node": "mocha ./tests/tests.js"
   },
   "dependencies": {
-    "@p2pmoney-org/ethereum_core": "^0.11.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
