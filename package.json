@@ -1,12 +1,17 @@
 {
-  "name": "ethereum_erc20",
+  "name": "@p2pmoney-org/ethereum_erc20",
   "version": "0.11.0",
   "author": "P2PMoney.org",
+  "homepage": "http://www.p2pmoney.org/",
   "license": "MIT",
   "scripts": {
-    "test": "node ./tests/tests.js"
+    "test:node": "mocha ./tests/tests.js"
   },
   "dependencies": {
-    "forever": "^0.15.3"
+    "@p2pmoney-org/ethereum_core": "^0.11.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.1"
   }
 }
