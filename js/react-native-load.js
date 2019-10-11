@@ -4,11 +4,12 @@ console.log('react-native-load.js');
 
 
 class ReactNativeLoad {
-	constructor() {
+	constructor(node_module) {
 		this.name = 'reactnativeload';
 		
 		var glob = global;
 		
+		this.node_module = node_module;
 		
 		console.log('ReactNativeLoad constructor');
 	}
@@ -20,16 +21,15 @@ class ReactNativeLoad {
 			var self = this;
 			
 			// bootstrap of framework
+			var _globalscope = window; // react-native global
+			
 			
 			// prevent automatic load before we return from import
-			window.global_scope_no_load = true;
-			window.dapp_browser_no_load = true;
+			_globalscope.global_scope_no_load = true;
+			_globalscope.dapp_browser_no_load = true;
 
-			var _globalscope = global; // nodejs global
-			
 			// get ethereum_core
-			var Ethereum_core = require('../../ethereum_core');
-			var ethereum_core = Ethereum_core.getObject();
+			var ethereum_core = this.node_module.ethereum_core;
 			
 			if (ethereum_core.initialized === false) {
 				console.log('WARNING: ethereum_core should be initialized before initializing ethereum_erc20');
@@ -76,13 +76,13 @@ class ReactNativeLoad {
 			});
 
 			
-			// put in bootstrap window.simplestore now it exists
-			/*window.simplestore.ReactNativeLoad = this;
+			// put in bootstrap _globalscope.simplestore now it exists
+			/*_globalscope.simplestore.ReactNativeLoad = this;
 
 
 			// load sequence
-			var Bootstrap = window.simplestore.Bootstrap;
-			var ScriptLoader = window.simplestore.ScriptLoader;
+			var Bootstrap = _globalscope.simplestore.Bootstrap;
+			var ScriptLoader = _globalscope.simplestore.ScriptLoader;
 			
 			var bootstrapobject = Bootstrap.getBootstrapObject();
 			var rootscriptloader = ScriptLoader.getRootScriptLoader();
@@ -131,7 +131,7 @@ class ReactNativeLoad {
 
 
 			// then load libs and modules
-			var global = window.simplestore.Global.getGlobalObject();
+			var global = _globalscope.simplestore.Global.getGlobalObject();
 			
 			// libs
 			require('./loaders/libs-load.js');
@@ -177,8 +177,10 @@ class ReactNativeLoad {
 	}
 	
 	_checkLoad() {
-		var Bootstrap = window.simplestore.Bootstrap;
-		var ScriptLoader = window.simplestore.ScriptLoader;
+		var _globalscope = window; // react-native global
+
+		var Bootstrap = _globalscope.simplestore.Bootstrap;
+		var ScriptLoader = _globalscope.simplestore.ScriptLoader;
 		
 		var bootstrapobject = Bootstrap.getBootstrapObject();
 		var rootscriptloader = ScriptLoader.getRootScriptLoader();

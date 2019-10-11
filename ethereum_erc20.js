@@ -10,13 +10,17 @@ class Ethereum_erc20 {
 		this.initialized = false;
 		
 		this.initializationpromise = null;
+		
+		var Ethereum_core = require('@p2pmoney-org/ethereum_core');
+		//var Ethereum_core = require('../ethereum_core');
+		
+		this.ethereum_core = Ethereum_core.getObject();
 	}
 	
 	init(callback) {
 		console.log('ethereum_erc20 init called');
 		
-		var Ethereum_core = require('../ethereum_core');
-		var ethereum_core = Ethereum_core.getObject();
+		var ethereum_core = this.ethereum_core;
 		
 		// load contracts
 		var jsoncontent = require('./imports/build/contracts/TokenERC20.json');
@@ -29,7 +33,7 @@ class Ethereum_erc20 {
 			
 			var ReactNativeLoad = require( './js/react-native-load.js');
 
-			this.load = new ReactNativeLoad();
+			this.load = new ReactNativeLoad(this);
 		}
 		else if (typeof global !== 'undefined') {
 			console.log('loading for nodejs');
@@ -37,7 +41,7 @@ class Ethereum_erc20 {
 			// we are in nodejs
 			var NodeLoad = require( './js/node-load.js');
 			
-			this.load = new NodeLoad();
+			this.load = new NodeLoad(this);
 		}
 
 		var self = this;
@@ -77,6 +81,9 @@ class Ethereum_erc20 {
 		
 	}
 	
+	getControllersObject() {
+		return require('./js/control/controllers.js').getObject();
+	}
 
 	// static methods
 	static getObject() {
@@ -87,6 +94,7 @@ class Ethereum_erc20 {
 		
 		return ethereum_erc20;
 	}
+	
 }
 
 module.exports = Ethereum_erc20;
