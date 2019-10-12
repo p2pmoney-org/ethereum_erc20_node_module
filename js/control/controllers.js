@@ -7,8 +7,8 @@ var ModuleControllers = class {
 	constructor() {
 		this.module = null;
 		
-		this.ethereum_core = require('../../../ethereum_core').getObject();
 		this.ethereum_erc20 = require('../../../ethereum_erc20').getObject();
+		this.ethereum_core = this.ethereum_erc20.ethereum_core;
 		
 		this.global = this.ethereum_erc20.getGlobalObject();
 
