@@ -217,7 +217,9 @@ var ModuleControllers = class {
 		
 		divbalance.currentwalletaddress = wallet.getAddress();
 
-		var res = ethnodemodule.getChainAccountBalance(session, wallet, function(err, res) {
+		var web3providerurl = contract.getWeb3ProviderUrl();
+
+		var res = ethnodemodule.getAltChainAccountBalance(session, wallet, web3providerurl, function(err, res) {
 			if (!err) {
 
 				var balancetext = ethnodecontrollers.getEtherStringFromWei(res);

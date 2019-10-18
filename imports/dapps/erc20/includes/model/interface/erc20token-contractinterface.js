@@ -2,9 +2,11 @@
 
 var ERC20TokenContractInterface = class {
 	
-	constructor(session, contractaddress) {
+	constructor(session, contractaddress, web3providerurl) {
 		this.session = session;
 		this.address = contractaddress;
+		
+		this.web3providerurl = web3providerurl;
 		
 		// operating variables
 		this.finalized_init = null;
@@ -23,6 +25,14 @@ var ERC20TokenContractInterface = class {
 		this.address = address;
 	}
 	
+	getWeb3ProviderUrl() {
+		return this.web3providerurl;
+	}
+	
+	setWeb3ProviderUrl(url) {
+		this.web3providerurl = url;
+	}
+	
 	getContractInstance() {
 		if (this.contractinstance)
 			return this.contractinstance;
@@ -31,7 +41,7 @@ var ERC20TokenContractInterface = class {
 		var global = session.getGlobalObject();
 		var ethnodemodule = global.getModuleObject('ethnode');
 		
-		this.contractinstance = ethnodemodule.getContractInstance(session, this.address, './contracts/TokenERC20.json');
+		this.contractinstance = ethnodemodule.getContractInstance(session, this.address, './contracts/TokenERC20.json', this.web3providerurl);
 		
 		return this.contractinstance;
 	}

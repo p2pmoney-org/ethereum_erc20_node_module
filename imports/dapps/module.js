@@ -4,7 +4,7 @@ var Module = class {
 	
 	constructor() {
 		this.name = 'dapps';
-		this.current_version = "0.12.0.2019.10.12";
+		this.current_version = "0.12.1.2019.10.21";
 		
 		this.global = null; // put by global on registration
 		this.isready = false;
@@ -121,8 +121,8 @@ var Module = class {
 		
 		var global = this.global;
 		
-		global.registerHook('alterMenuBar_hook', 'dapps', this.alterMenuBar_hook);
-		global.registerHook('getVersionInfo_hook', 'dapps', this.getVersionInfo_hook);
+		global.registerHook('alterMenuBar_hook', this.name, this.alterMenuBar_hook);
+		global.registerHook('getVersionInfo_hook', this.name, this.getVersionInfo_hook);
 	}
 	
 	//
@@ -178,7 +178,7 @@ var Module = class {
 		
 
 		
-		result.push({module: 'dapps', handled: true});
+		result.push({module: this.name, handled: true});
 		
 		return true;
 	}
@@ -198,7 +198,7 @@ var Module = class {
 		versioninfos.push(versioninfo);
 
 		
-		result.push({module: 'dapps', handled: true});
+		result.push({module: this.name, handled: true});
 		
 		return true;
 	}

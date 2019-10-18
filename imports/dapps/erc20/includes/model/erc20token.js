@@ -2,7 +2,7 @@
 
 var ERC20Token = class {
 	
-	constructor(session, contractaddress) {
+	constructor(session, contractaddress, web3providerurl) {
 		this.session = session;
 		this.address = contractaddress;
 		
@@ -25,11 +25,13 @@ var ERC20Token = class {
 		// chain data
 		
 		
-		// Contracts class
 		var global = session.getGlobalObject();
 		var commonmodule = global.getModuleObject('common');
 		var ethnodemodule = global.getModuleObject('ethnode');
 		
+		this.web3providerurl = (web3providerurl ? web3providerurl : ethnodemodule.getWeb3ProviderUrl(session));
+
+		// Contracts class
 		this.Contracts = ethnodemodule.Contracts;
 		
 		this.savedstatus = this.Contracts.STATUS_LOCAL;
@@ -43,6 +45,14 @@ var ERC20Token = class {
 	
 	setAddress(address) {
 		this.address = address;
+	}
+	
+	getWeb3ProviderUrl() {
+		return this.web3providerurl;
+	}
+	
+	setWeb3ProviderUrl(url) {
+		this.web3providerurl = url;
 	}
 	
 	getContractType() {
@@ -120,6 +130,7 @@ var ERC20Token = class {
 		var uuid = this.getUUID();
 		var address = this.getAddress();
 		var contracttype = this.getContractType();
+		var web3providerurl = this.getWeb3ProviderUrl();
 		
 		var status = this.getStatus();
 		
@@ -134,7 +145,7 @@ var ERC20Token = class {
 		var submissiondate = this.getLocalSubmissionDate();
 
 		
-		var json = {uuid: uuid, address: address, contracttype: contracttype, status: status, 
+		var json = {uuid: uuid, address: address, contracttype: contracttype, web3providerurl: web3providerurl, status: status, 
 				name: name, symbol: symbol, decimals: decimals, totalsupply: totalsupply,
 				creationdate: creationdate, submissiondate: submissiondate,
 				description: description};
@@ -289,11 +300,12 @@ var ERC20Token = class {
 		
 		var session = this.session;
 		var contractaddress = this.address;
+		var web3providerurl = this.web3providerurl;
 		
 		var global = session.getGlobalObject();
 		var erc20tokenmodule = global.getModuleObject('erc20');
 		
-		this.contractinterface = new erc20tokenmodule.ERC20TokenContractInterface(session, contractaddress)
+		this.contractinterface = new erc20tokenmodule.ERC20TokenContractInterface(session, contractaddress, web3providerurl);
 		
 		return this.contractinterface;
 	}
