@@ -4,7 +4,7 @@ var Module = class {
 	
 	constructor() {
 		this.name = 'dapps';
-		this.current_version = "0.12.1.2019.10.21";
+		this.current_version = "0.12.2.2019.11.23";
 		
 		this.global = null; // put by global on registration
 		this.isready = false;
