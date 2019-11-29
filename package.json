@@ -1,18 +1,18 @@
 {
   "name": "@p2pmoney-org/ethereum_erc20",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "author": "P2PMoney.org",
   "homepage": "http://www.p2pmoney.org/",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/p2pmoney-org/ethereum_er20_node_module"
+    "url": "https://github.com/p2pmoney-org/ethereum_erc20_node_module"
   },
   "scripts": {
     "test:node": "mocha ./tests/tests.js"
   },
   "dependencies": {
-    "@p2pmoney-org/ethereum_core": "^0.12.2"
+    "@p2pmoney-org/ethereum_core": "^0.13.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
