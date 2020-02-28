@@ -488,7 +488,7 @@ var ERC20TokenContractInterface = class {
 		
 		var alloweraddress = payingaccount.getAddress();
 		
-		console.log('ERC20TokenContractInterface.approveAndCall called from ' + alloweraddress + ' spender ' + spenderaddress + ' amount ' + amount + ' with gas limit ' + gas + ' and gasPrice ' + gasPrice + ' with transactionuuid ' + transactionuuid);
+		console.log('ERC20TokenContractInterface.approveAndCall called from ' + alloweraddress + ' spender ' + alloweraddress + ' amount ' + amount + ' with gas limit ' + gas + ' and gasPrice ' + gasPrice + ' with transactionuuid ' + transactionuuid);
 
 		// we validate the transaction
 		if (!this.validateTransactionExecution(payingaccount, gas, gasPrice, callback))
