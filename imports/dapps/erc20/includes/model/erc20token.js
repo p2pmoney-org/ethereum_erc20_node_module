@@ -191,13 +191,13 @@ var ERC20Token = class {
 		return true; // necessarily true for contracts
 	}
 	
-	isOnChain() {
+	/*isOnChain() {
 		if (this.address == null)
 			return false;
 		else
 			return true;
 		//return (this.livestatus == this.Contracts.STATUS_ON_CHAIN);
-	}
+	}*/
 	
 	getStatus() {
 		// 4 local saved status STATUS_LOCAL, STATUS_LOST, STATUS_CANCELLED, STATUS_REJECTED
