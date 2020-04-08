@@ -38,7 +38,7 @@ var ModuleControllers = class {
 		return erc20tokencontract;
 	}
 	
-	getWalletERC20Position(session, providerurl, tokenaddress, address, callback) {
+	getAddressERC20Position(session, providerurl, tokenaddress, address, callback) {
 		var global = this.global;
 
 		var commonmodule = global.getModuleObject('common');
