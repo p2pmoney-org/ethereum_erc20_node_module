@@ -52,8 +52,6 @@ class ReactNativeLoad {
 			var dappsscriptloader = modulescriptloader.getChildLoader('dappmodulesloader');
 
 			require('./loaders/dapps-load.js');
-
-			
 			
 			// end of modules load
 			rootscriptloader.registerEventListener('on_dapps_module_load_end', function(eventname) {
