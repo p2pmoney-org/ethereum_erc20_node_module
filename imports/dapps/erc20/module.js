@@ -85,7 +85,7 @@ var Module = class {
 	hasLoadStarted() {
 		return this.isloading;
 	}
-	
+
 	_getGlobalObject() {
 		var _global = (this.global ? this.global : null);
 		
@@ -106,6 +106,20 @@ var Module = class {
 		return _global;
 	}
 	
+	// optional  module functions
+	registerHooks() {
+		console.log('module registerHooks called for ' + this.name);
+		
+		var global = this.global;
+		
+	}
+	
+	//
+	// hooks
+	//
+	
+
+	// loading of model
 	registerModel() {
 		var global = this._getGlobalObject();
 		

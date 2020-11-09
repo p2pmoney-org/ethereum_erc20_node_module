@@ -17,6 +17,11 @@ class Ethereum_erc20 {
 		this.ethereum_core = Ethereum_core.getObject();
 	}
 	
+	getVersion() {
+		var packagejson = require('./package.json');
+		return packagejson.version;
+	}
+	
 	async init(callback) {
 		console.log('@p2pmoney-org/ethereum_erc20 init called');
 

@@ -4,6 +4,7 @@ var Module = class {
 	
 	constructor() {
 		this.name = 'erc20';
+		this.current_version = "0.20.0.2020.11.12";
 		
 		this.global = null; // put by global on registration
 		this.isready = false;
@@ -75,6 +76,8 @@ var Module = class {
 		
 		var global = this.global;
 		
+		global.registerHook('getVersionInfo_hook', this.name, this.getVersionInfo_hook);
+
 		global.registerHook('postFinalizeGlobalScopeInit_hook', this.name, this.postFinalizeGlobalScopeInit_hook);
 		
 		global.registerHook('creatingSession_hook', this.name, this.creatingSession_hook);
@@ -103,6 +106,25 @@ var Module = class {
 	//
 	// hooks
 	//
+	getVersionInfo_hook(result, params) {
+		console.log('getVersionInfo_hook called for ' + this.name);
+		
+		var global = this.global;
+		
+		var versioninfos = params[0];
+		
+		var versioninfo = {};
+		
+		versioninfo.label = global.t('ethereum erc20');
+		versioninfo.value = this.current_version;
+
+		versioninfos.push(versioninfo);
+
+		
+		result.push({module: this.name, handled: true});
+		
+		return true;
+	}
 	postFinalizeGlobalScopeInit_hook(result, params) {
 		console.log('postFinalizeGlobalScopeInit_hook called for ' + this.name);
 		
