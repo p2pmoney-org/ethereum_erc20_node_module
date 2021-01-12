@@ -508,6 +508,25 @@ var ERC20Token = class {
 	}
 	
 	// transactions
+	async transferAsync(senderaccount, recipientaccount, amount, ethtx) {
+		if (!ethtx)
+			return Promise.reject('ethereum transaction is undefined');
+
+		var session = this.session;
+		var fromaddress = senderaccount.getAddress();
+		var toaddress = recipientaccount.getAddress();
+		var payingaccount = ethtx.getPayingAccount();
+		var payingaddress = (payingaccount ? payingaccount.getAddress() : fromaddress);
+
+		var contractinterface = this.getContractInterface();
+
+		if (session.areAddressesEqual(payingaddress, fromaddress))
+			return contractinterface.transferAsync(toaddress, amount, ethtx);
+		else {
+			return contractinterface.transferFromAsync(fromaddress, toaddress, amount, ethtx);
+		}
+	}
+
 	transfer(senderaccount, recipientaccount, amount, payingaccount, gas, gasPrice, callback) {
 		var self = this;
 		var session = this.session;

@@ -300,6 +300,50 @@ var ERC20TokenContractInterface = class {
 		return promise;
 		
 	}
+
+	async transferAsync(toaddress, amount, ethtx) {
+		var fromaccount = ethtx.getFromAccount();
+		var payingaccount = ethtx.getPayingAccount();
+
+		payingaccount = (payingaccount ? payingaccount : fromaccount);
+
+		// we validate the transaction
+		var gas = ethtx.getGas();
+		var gasPrice = ethtx.getGasPrice();
+
+		if (!this.validateTransactionExecution(payingaccount, gas, gasPrice))
+			return Promise.reject('transaction was not valid');
+		
+		var contractinstance = this.getContractInstance();
+
+		var valid = await this.validateTransferExecution(payingaccount, amount);
+
+		if (valid === false)
+			return Promise.reject('transaction was not valid');
+
+		// create contract transaction
+		var gas = ethtx.getGas();
+		var gasPrice = ethtx.getGasPrice();
+		var transactionuuid = ethtx.getTransactionUUID();
+		var value = ethtx.getValue();
+
+		var contracttransaction = contractinstance.getContractTransactionObject(payingaccount, gas, gasPrice);
+			
+		contracttransaction.setContractTransactionUUID(transactionuuid);
+		contracttransaction.setValue(value);
+
+		// set call argument
+		var args = [];
+		
+		args.push(toaddress);
+		args.push(amount);
+		
+		contracttransaction.setArguments(args);
+		
+		contracttransaction.setMethodName('transfer');
+		
+		return contractinstance.method_send(contracttransaction);
+	}
 	
 	transfer(toaddress, amount, 
 			payingaccount, gas, gasPrice, 
@@ -328,17 +372,6 @@ var ERC20TokenContractInterface = class {
 		})
 		.then(function(res) {
 			// then call the transfer transaction
-			/*var params = [];
-			
-			params.push(toaddress);
-			params.push(amount);
-			
-			var value = null;
-			var txdata = null;
-			var nonce = null;
-			
-			return contractinstance.method_sendTransaction('transfer', params, payingaccount, value, gas, gasPrice, txdata, nonce, callback);*/
-			
 			var contracttransaction = contractinstance.getContractTransactionObject(payingaccount, gas, gasPrice);
 			
 			var args = [];
@@ -364,6 +397,51 @@ var ERC20TokenContractInterface = class {
 		return promise;
 	}
 	
+	async transferFromAsync(fromaddress, toaddress, amount, ethtx) {
+		var fromaccount = ethtx.getFromAccount();
+		var payingaccount = ethtx.getPayingAccount();
+
+		payingaccount = (payingaccount ? payingaccount : fromaccount);
+
+		// we validate the transaction
+		var gas = ethtx.getGas();
+		var gasPrice = ethtx.getGasPrice();
+
+		if (!this.validateTransactionExecution(payingaccount, gas, gasPrice, callback))
+			return Promise.reject('transaction was not valid');
+		
+		var contractinstance = this.getContractInstance();
+
+		var valid = await this.validateTransferExecution(payingaccount, amount);
+
+		if (valid === false)
+			return Promise.reject('transaction was not valid');
+
+		// create contract transaction
+		var gas = ethtx.getGas();
+		var gasPrice = ethtx.getGasPrice();
+		var transactionuuid = ethtx.getTransactionUUID();
+		var value = ethtx.getValue();
+
+		var contracttransaction = contractinstance.getContractTransactionObject(payingaccount, gas, gasPrice);
+			
+		contracttransaction.setContractTransactionUUID(transactionuuid);
+		contracttransaction.setValue(value);
+
+		// set call argument
+		var args = [];
+		
+		args.push(fromaddress);
+		args.push(toaddress);
+		args.push(amount);
+		
+		contracttransaction.setArguments(args);
+		
+		contracttransaction.setMethodName('transferFrom');
+		
+		return contractinstance.method_send(contracttransaction);
+	}
+
 	transferFrom(fromaccount, toaddress, amount, 
 			payingaccount, gas, gasPrice, 
 			transactionuuid, callback) {
@@ -392,18 +470,6 @@ var ERC20TokenContractInterface = class {
 		})
 		.then(function(res) {
 			// then call the transfer transaction
-			/*var params = [];
-			
-			params.push(fromaddress);
-			params.push(toaddress);
-			params.push(amount);
-			
-			var value = null;
-			var txdata = null;
-			var nonce = null;
-			
-			return contractinstance.method_sendTransaction('transferFrom', params, payingaccount, value, gas, gasPrice, txdata, nonce, callback);*/
-
 			var contracttransaction = contractinstance.getContractTransactionObject(payingaccount, gas, gasPrice);
 			
 			var args = [];
