@@ -88,6 +88,9 @@ var Module = class {
 		
 		var modulescriptloader = global.findScriptLoader('moduleloader');
 		var dappsscriptloader = global.findScriptLoader('dappmodulesloader');
+
+		var ScriptLoader = global.getGlobalStoredObject('ScriptLoader');
+		ScriptLoader.reclaimScriptLoaderName('dappsmodelsloader'); // in case another node module used this name
 		var dappsmodelsloader = dappsscriptloader.getChildLoader('dappsmodelsloader');
 
 		var moduleroot = './dapps';
