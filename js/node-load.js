@@ -54,6 +54,10 @@ class NodeLoad {
 			let dappsscriptloader = erc20modulescriptloader.getChildLoader('dappmodulesloader');
 			
 			// let /dapps/module push scripts in 'dappmodulesloader' then load them
+			//
+			// !!!Note: we should conform to ethereum_erc721 and load ./dapps/erc20/module.js
+			// instead of ./dapps/module.js
+			// We should also reclaim dappsmodelsloader
 			erc20modulescriptloader.push_script('./dapps/module.js', function () {
 				console.log('dapps module loaded');
 			});
@@ -63,6 +67,8 @@ class NodeLoad {
 				
 				// loading dapps pushed in 'dappmodulesloader'
 				dappsscriptloader.load_scripts(function() {
+
+					// !!!Note: do not forget to load models if removing load of ./dapp/module.js
 					
 					_nodeobject.loadModule('dapps', erc20modulescriptloader, function() {
 						rootscriptloader.signalEvent('on_dapps_module_load_end');

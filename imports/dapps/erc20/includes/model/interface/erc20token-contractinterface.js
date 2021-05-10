@@ -6,7 +6,13 @@ var ERC20TokenContractInterface = class {
 		this.session = session;
 		this.address = contractaddress;
 		
+		this.contractpath = './contracts/TokenERC20.json';
+		
 		this.web3providerurl = web3providerurl;
+
+		this.chainid = null;
+		this.networkid = null;
+
 		
 		// operating variables
 		this.finalized_init = null;
@@ -15,6 +21,15 @@ var ERC20TokenContractInterface = class {
 		
 		var global = session.getGlobalObject();
 		this.ethnodemodule = global.getModuleObject('ethnode');
+	}
+	
+	getContractPath() {
+		return this.contractpath;
+	}
+
+	setContractPath(path) {
+		this.contractpath = path;
+		this.contractinstance = null;
 	}
 	
 	getAddress() {
@@ -33,6 +48,22 @@ var ERC20TokenContractInterface = class {
 		this.web3providerurl = url;
 	}
 	
+	getChainId() {
+		return this.chainid;
+	}
+
+	setChainId(chainid) {
+		this.chainid = chainid;
+	}
+
+	getNetworkId() {
+		return this.networkid;
+	}
+
+	setNetworkId(networkid) {
+		this.networkid = networkid;
+	}
+	
 	getContractInstance() {
 		if (this.contractinstance)
 			return this.contractinstance;
@@ -41,7 +72,16 @@ var ERC20TokenContractInterface = class {
 		var global = session.getGlobalObject();
 		var ethnodemodule = global.getModuleObject('ethnode');
 		
-		this.contractinstance = ethnodemodule.getContractInstance(session, this.address, './contracts/TokenERC20.json', this.web3providerurl);
+		var contractpath = this.getContractPath();
+
+		this.contractinstance = ethnodemodule.getContractInstance(session, this.address, contractpath, this.web3providerurl);
+
+		if (this.chainid)
+		this.contractinstance.setChainId(this.chainid);
+		
+		if (this.networkid)
+		this.contractinstance.setNetworkId(this.networkid);
+
 		
 		return this.contractinstance;
 	}

@@ -26,10 +26,12 @@ var ERC20Token = class {
 		
 		
 		var global = session.getGlobalObject();
-		var commonmodule = global.getModuleObject('common');
 		var ethnodemodule = global.getModuleObject('ethnode');
 		
 		this.web3providerurl = (web3providerurl ? web3providerurl : ethnodemodule.getWeb3ProviderUrl(session));
+
+		this.chainid = null;
+		this.networkid = null;
 
 		// Contracts class
 		this.Contracts = ethnodemodule.Contracts;
@@ -57,6 +59,22 @@ var ERC20Token = class {
 	
 	getContractType() {
 		return 'TokenERC20';
+	}
+	
+	getChainId() {
+		return this.chainid;
+	}
+
+	setChainId(chainid) {
+		this.chainid = chainid;
+	}
+
+	getNetworkId() {
+		return this.networkid;
+	}
+
+	setNetworkId(networkid) {
+		this.networkid = networkid;
 	}
 	
 	getUUID() {
@@ -131,6 +149,8 @@ var ERC20Token = class {
 		var address = this.getAddress();
 		var contracttype = this.getContractType();
 		var web3providerurl = this.getWeb3ProviderUrl();
+		var chainid = this.getChainId();
+		var networkid = this.getNetworkId();
 		
 		var status = this.getStatus();
 		
@@ -145,7 +165,8 @@ var ERC20Token = class {
 		var submissiondate = this.getLocalSubmissionDate();
 
 		
-		var json = {uuid: uuid, address: address, contracttype: contracttype, web3providerurl: web3providerurl, status: status, 
+		var json = {uuid: uuid, address: address, contracttype: contracttype, status: status,
+				web3providerurl: web3providerurl, chainid: chainid, networkid: networkid,
 				name: name, symbol: symbol, decimals: decimals, totalsupply: totalsupply,
 				creationdate: creationdate, submissiondate: submissiondate,
 				description: description};
@@ -286,6 +307,16 @@ var ERC20Token = class {
 	}
 	
 	// chain part
+	getContractPath() {
+		var contractinterface = this.getContractInterface();
+		return contractinterface.getContractPath();
+	}
+
+	setContractPath(path) {
+		var contractinterface = this.getContractInterface();
+		return contractinterface.setContractPath(path);
+	}
+
 	getContractInterface() {
 		if (this.contractinterface)
 			return this.contractinterface;
@@ -298,6 +329,12 @@ var ERC20Token = class {
 		var erc20tokenmodule = global.getModuleObject('erc20');
 		
 		this.contractinterface = new erc20tokenmodule.ERC20TokenContractInterface(session, contractaddress, web3providerurl);
+
+		if (this.chainid)
+		this.contractinterface.setChainId(this.chainid);
+		
+		if (this.networkid)
+		this.contractinterface.setNetworkId(this.networkid);
 		
 		return this.contractinterface;
 	}
@@ -308,7 +345,6 @@ var ERC20Token = class {
 	deploy(payingaccount, gas, gasPrice, callback) {
 		var self = this;
 		var session = this.session;
-		//var EthereumNodeAccess = session.getEthereumNodeAccessInstance();
 
 		var fromaddress = payingaccount.getAddress();
 		
@@ -361,8 +397,51 @@ var ERC20Token = class {
 		var Contracts = this.Contracts;
 		var chaintestfunction = (this.isOnChain).bind(this);
 		var contractinstance = this.getContractInterface().getContractInstance();
+
+		var self = this;
+		var session = this.session;
+		var global = session.getGlobalObject();
+
+		var ethnodemodule = global.getModuleObject('ethnode');
+		var web3providerurl = this.getWeb3ProviderUrl();
+		var EthereumNodeAccess = ethnodemodule.getEthereumNodeAccessInstance(session, web3providerurl);
+
+		var status;
 		
-		return Contracts.checkStatus(this, chaintestfunction, contractinstance, callback);
+		return Contracts.checkStatus(this, chaintestfunction, contractinstance)
+		.then(function(res) {
+			status = res;
+
+			if (self.chainid)
+				return self.chainid;
+			else
+				return EthereumNodeAccess.web3_getChainId()
+		})
+		.then(function(res) {
+			if (!self.chainid)
+			self.chainid = res;
+
+			if (self.networkid)
+				return self.networkid;
+			else
+				return EthereumNodeAccess.web3_getNetworkId()
+
+		})
+		.then(function(res) {
+			if (!self.networkid)
+			self.networkid = res;
+
+			if (callback)
+				callback(null, status);
+
+			return status;
+		})
+		.catch(function(err) {
+			if (callback)
+				callback(null, status);
+
+			return status;
+		});
 	}
 	
 	isOnChain(callback) {
